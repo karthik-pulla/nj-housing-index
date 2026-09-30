@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Methodology &amp; Data — NJ Housing Affordability Index</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Full methodology, data sources, and limitations behind the New Jersey Housing Affordability Index.">
+<style>
+  :root { --bg:#ffffff; --panel:#f7f8fa; --border:#e2e5ea; --text:#1a2233; --muted:#6b7486; --accent:#1a5fb4; --accent-soft:#e3ecf9; }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; color:var(--text); line-height:1.6; background:var(--bg); }
+  a { color:var(--accent); }
+  header { position:sticky; top:0; background:rgba(255,255,255,.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--border); z-index:10; padding:12px 22px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  header .brand { font-weight:700; font-size:14px; text-decoration:none; color:var(--text); }
+  header .brand:hover { color:var(--accent); }
+  header nav { margin-left:auto; display:flex; gap:8px; }
+  .navbtn { border:1px solid var(--border); background:var(--panel); border-radius:7px; padding:6px 13px; font-size:12.5px; font-weight:600; text-decoration:none; color:var(--accent); }
+  .navbtn:hover { background:var(--accent-soft); }
+  .navbtn.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .navbtn.primary:hover { opacity:.9; background:var(--accent); }
+
+  .layout { max-width:1080px; margin:0 auto; display:flex; gap:46px; padding:38px 24px 100px; align-items:flex-start; }
+  aside.toc { position:sticky; top:70px; width:200px; flex:none; font-size:13px; }
+  aside.toc a { display:block; padding:5px 0; color:var(--muted); text-decoration:none; border-left:2px solid transparent; padding-left:10px; }
+  aside.toc a:hover, aside.toc a.active { color:var(--accent); border-left-color:var(--accent); }
+  aside.toc .toch { font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:#a9b0bd; margin:16px 0 4px; padding-left:10px; }
+  main { flex:1; min-width:0; }
+
+  .hero { margin-bottom:36px; }
+  .hero .kicker { font-size:12.5px; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:.06em; }
+  .hero h1 { font-size:32px; margin:8px 0 10px; letter-spacing:-.01em; }
+  .hero p.lede { font-size:16px; color:var(--muted); max-width:640px; }
+
+  section { margin:44px 0; scroll-margin-top:76px; }
+  section h2 { font-size:21px; margin-bottom:12px; letter-spacing:-.01em; }
+  section h3 { font-size:15px; margin:22px 0 8px; color:var(--accent); }
+  p { font-size:14.5px; }
+  ul, ol { padding-left:22px; font-size:14.5px; }
+  li { margin-bottom:6px; }
+
+  .formula { background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 20px; font-family:ui-monospace,Menlo,"SF Mono",monospace; font-size:13.5px; margin:14px 0; line-height:1.75; overflow-x:auto; }
+  .formula .label { color:var(--muted); }
+
+  table { width:100%; border-collapse:collapse; font-size:13.5px; margin:14px 0; }
+  th, td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--border); vertical-align:top; }
+  th { color:var(--muted); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:.03em; }
+  tr:last-child td { border-bottom:none; }
+  code { background:var(--panel); border:1px solid var(--border); border-radius:4px; padding:1px 5px; font-size:12.5px; }
+
+  .callout { border-left:3px solid var(--accent); background:var(--accent-soft); border-radius:0 8px 8px 0; padding:12px 16px; font-size:13.5px; margin:14px 0; }
+  .callout.warn { border-color:#c8971f; background:#fdf6df; }
+  .callout.warn b { color:#8a6d1a; }
+
+  .srccard { border:1px solid var(--border); border-radius:10px; padding:16px 18px; margin:14px 0; }
+  .srccard h4 { font-size:14.5px; margin-bottom:4px; }
+  .srccard .meta { font-size:12px; color:var(--muted); margin-bottom:8px; }
+  .srccard p { font-size:13.5px; margin:0; }
+
+  .cta-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:18px; }
+
+  footer { border-top:1px solid var(--border); padding:26px 24px 60px; text-align:center; font-size:12.5px; color:var(--muted); }
+  footer a { color:var(--muted); text-decoration:underline; }
+
+  @media (max-width:860px){
+    .layout { flex-direction:column; padding:24px 18px 70px; gap:0; }
+    aside.toc { display:none; }
+    .hero h1 { font-size:26px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="brand">◂ NJ Housing Affordability Index</a>
+  <nav>
+    <a class="navbtn" href="index.html">Home</a>
+    <a class="navbtn primary" href="app.html">Launch the map</a>
+  </nav>
+</header>
+
+<div class="layout">
+  <aside class="toc" id="toc">
+    <div class="toch">On this page</div>
+    <a href="#overview">Overview</a>
+    <a href="#math">The math</a>
+    <a href="#components">Why these components</a>
+    <a href="#sources">Data sources</a>
+    <div class="toch">Rigor</div>
+    <a href="#dictionary">Data dictionary</a>
+    <a href="#ambiguity">Disambiguation</a>
+    <a href="#limitations">Limitations</a>
+    <a href="#reproduce">Reproducibility</a>
+  </aside>
+
+  <main>
+    <div class="hero">
+      <div class="kicker">Methodology &amp; Data</div>
+      <h1>How the index is built</h1>
+      <p class="lede">A full account of the math, the data, and the judgment calls behind the New Jersey Housing Affordability Index — written for researchers, journalists, and policy staff who need to check our work.</p>
+    </div>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>The index scores all 564 New Jersey municipalities on housing affordability, combining home price burden, price momentum, and zoning restrictiveness into a single 0–100 score, where higher means more affordable. It's intended to give anyone — homebuyers, advocates, policymakers, or researchers — a town-by-town, comparable view of affordability pressure across the state, something no single existing dataset provides on its own.</p>
+      <p>Every number on the site traces back to a named public dataset (below). Where a municipality lacks a given data point, the site says so explicitly rather than estimating or hiding the gap.</p>
+    </section>
+
+    <section id="math">
+      <h2>The math</h2>
+      <p>Each municipality receives three component scores, each expressed as an <b>affordability percentile</b> (0–100, higher = more affordable) relative to all NJ municipalities with that data point:</p>
+      <div class="formula">
+<span class="label">P (price burden)</span>   = 100 − percentile( ZHVI<sub>Jun 2026</sub> ÷ median household income )
+<span class="label">G (price momentum)</span> = 100 − percentile( 5-year ZHVI growth )
+<span class="label">Z (zoning)</span>         = 100 − percentile( NZLUD zoning restrictiveness index, ZRI )
+      </div>
+      <p>These combine into the final score as a weighted average:</p>
+      <div class="formula">Affordability Index = ( w<sub>P</sub>·P + w<sub>G</sub>·G + w<sub>Z</sub>·Z ) ÷ ( w<sub>P</sub> + w<sub>G</sub> + w<sub>Z</sub> )</div>
+      <p>Default weights are w<sub>P</sub>=50, w<sub>G</sub>=25, w<sub>Z</sub>=25 — adjustable live in the map tool's sidebar, so you can test how sensitive rankings are to your own judgment about what matters. If a component is missing for a municipality, its weight is redistributed proportionally across whatever components are available. A score requires at least the price-burden component (ZHVI and income both present); 462 of 564 municipalities meet that bar. Everywhere a datum is missing, the site shows <b>"Unavailable"</b> rather than imputing a value.</p>
+      <div class="callout">Percentiles, not raw values, are averaged — this keeps a single outlier town (say, one with an extreme zoning score) from dominating the index the way raw units could, and keeps each component on the same 0–100 scale before weighting.</div>
+    </section>
+
+    <section id="components">
+      <h2>Why these three components</h2>
+      <ul>
+        <li><b>Price burden</b> is the core affordability measure: what a typical home costs relative to what local households actually earn. This is the standard price-to-income framing used in most academic and government affordability research.</li>
+        <li><b>Price momentum</b> (inverted, so faster growth scores lower) captures trajectory, not just a snapshot — a town that's cheap today but appreciating rapidly is becoming less attainable, which a one-time price/income snapshot would miss entirely.</li>
+        <li><b>Zoning restrictiveness</b> (inverted) captures a structural, forward-looking constraint: restrictive land-use rules — large minimum lot sizes, parking minimums, multifamily bans — predict future scarcity even in towns where prices look moderate right now. This is the piece most affordability indices omit, and the reason NZLUD was included.</li>
+      </ul>
+    </section>
+
+    <section id="sources">
+      <h2>Data sources &amp; collectors</h2>
+
+      <div class="srccard">
+        <h4>Zillow Home Value Index (ZHVI)</h4>
+        <div class="meta">Zillow Research &middot; monthly municipal series, Jan 2000 – Jun 2026</div>
+        <p>Typical home value for the middle price tier, by Zillow region. Where several Zillow regions map to one municipality, an equal-weighted average is used (not household-weighted). Three regions straddling two municipalities — Sewell, Parlin, Deepwater — count toward both.</p>
+      </div>
+      <div class="srccard">
+        <h4>Median household income</h4>
+        <div class="meta">U.S. Census Bureau, American Community Survey 2019–2023 5-year estimates, table B19013</div>
+        <p>County-subdivision level. Five-year estimates trade timeliness for smaller margins of error, which matters in low-population municipalities; even so, small-town estimates carry wider confidence intervals than the site surfaces.</p>
+      </div>
+      <div class="srccard">
+        <h4>Zoning restrictiveness (NZLUD)</h4>
+        <div class="meta">National Zoning and Land Use Database — Mleczko &amp; Desmond, Princeton University</div>
+        <p>Machine-read municipal zoning codes, including the Zoning Restrictiveness Index (ZRI) used here, plus minimum lot sizes, parking minimums, inclusionary zoning and ADU rules shown in each town's detail panel. Covers 105 of NJ's 564 municipalities (~19%).</p>
+      </div>
+      <div class="srccard">
+        <h4>Municipal boundaries &amp; population</h4>
+        <div class="meta">NJ Office of GIS (NJOGIS/NJGIN); U.S. Census 2020</div>
+        <p>Official municipal polygons and 2020 population counts, fetched live from NJOGIS's ArcGIS service on each visit to the map (cached in-browser for a week to keep repeat visits fast).</p>
+      </div>
+      <div class="srccard">
+        <h4>Market conditions (context, not an index input)</h4>
+        <div class="meta">Redfin Data Center &middot; city-level rolling 3-month window, Apr–Jun 2026</div>
+        <p>Median sale price, days on market, sale-to-list ratio, share sold above list, inventory, and homes sold. 691 NJ Redfin regions were matched to 385 municipalities via a Zillow-region name crosswalk and unique official names; unincorporated localities without a clean municipal match were excluded. Multi-region towns are sales-weighted. Small towns can be noisy at low transaction counts — the map shows the underlying sales count so readers can judge reliability themselves. A statewide snapshot (toggle on the map page) covers the state overall for June 2026, plus the national all-cash purchase share (26.9%, April 2026) and property-type breakdowns (single-family $613.6k median / 39 days on market; condo/co-op $470.3k / 55 days; townhouse $384.0k / 52 days; 2–4 unit multifamily $755.9k / 46 days).</p>
+      </div>
+    </section>
+
+    <section id="dictionary">
+      <h2>Data dictionary</h2>
+      <p>Selected fields available in the master dataset and on each municipality's panel:</p>
+      <table>
+        <tr><th>Field</th><th>Definition</th><th>Source</th></tr>
+        <tr><td><code>zhvi_latest</code></td><td>Home value index, June 2026</td><td>Zillow</td></tr>
+        <tr><td><code>median_hh_income</code></td><td>Median household income</td><td>Census ACS 2019–23</td></tr>
+        <tr><td><code>price_to_income</code></td><td>ZHVI ÷ median household income</td><td>Derived</td></tr>
+        <tr><td><code>zhvi_growth_1yr / 5yr / 10yr</code></td><td>Trailing home-value growth</td><td>Derived from Zillow</td></tr>
+        <tr><td><code>zri</code></td><td>NZLUD zoning restrictiveness index</td><td>NZLUD</td></tr>
+        <tr><td><code>min_lot_size, one_acre_more, inclusionary, adu, parking_median, mf_per</code></td><td>Zoning code attributes</td><td>NZLUD</td></tr>
+        <tr><td><code>rf_median_sale_price, rf_days_on_market, rf_sale_to_list, rf_share_above_list, rf_inventory, rf_homes_sold</code></td><td>Market activity, rolling 3-mo.</td><td>Redfin</td></tr>
+        <tr><td><code>pct_price_income, pct_growth_5yr, pct_zoning</code></td><td>Component percentiles (P, G, Z above)</td><td>Derived</td></tr>
+        <tr><td><code>affordability_index, index_rank</code></td><td>Final weighted score and statewide rank</td><td>Derived</td></tr>
+        <tr><td><code>data_coverage</code></td><td>Which source combination is present for this municipality</td><td>Derived</td></tr>
+      </table>
+      <p>The full dataset, with every column, is downloadable: <a href="nj_affordability_master.csv" download>nj_affordability_master.csv</a>.</p>
+    </section>
+
+    <section id="ambiguity">
+      <h2>Disambiguation methodology</h2>
+      <p>Several NJ place names are shared by two distinct municipalities (a borough and an adjoining township, most often), which the raw Zillow data left ambiguous. Each was resolved using Zillow's internal region ID cross-referenced against the official NJOGIS municipal code list:</p>
+      <table>
+        <tr><th>Zillow region</th><th>Region ID</th><th>Resolved to</th></tr>
+        <tr><td>Boonton</td><td>3752</td><td>Boonton Town (1401) — "Boonton Township" (17117) already held code 1402</td></tr>
+        <tr><td>Andover</td><td>831875</td><td>Andover Township (1902) — matched against NZLUD's independent record</td></tr>
+        <tr><td>Berlin</td><td>760887</td><td>Berlin Borough (405) — "West Berlin" (21762) already held Twp. code 406</td></tr>
+        <tr><td>Clinton</td><td>10869</td><td>Clinton Town (1005)</td></tr>
+        <tr><td>Shrewsbury</td><td>397046</td><td>Shrewsbury Borough (1344) — matched against NZLUD's independent record</td></tr>
+      </table>
+    </section>
+
+    <section id="limitations">
+      <h2>Limitations</h2>
+      <ul>
+        <li>ZHVI reflects typical owner-occupied home values, not rents — the index currently says nothing directly about renter affordability, which is a distinct and in many towns more urgent problem.</li>
+        <li>ACS income estimates carry wider margins of error in small, low-population municipalities than the point estimates shown here suggest.</li>
+        <li>NZLUD covers roughly 19% of NJ municipalities, so the zoning component of the index is unavailable for the rest — those towns' scores rely proportionally more on price burden and momentum.</li>
+        <li>Multi-region municipality averages (Zillow) are equal-weighted across regions, not household-weighted, which can slightly misstate towns with lopsided population distribution across their Zillow sub-regions.</li>
+        <li>Redfin market figures are contextual only and are not inputs to the index; small-town figures can be noisy given low transaction counts in a 3-month window.</li>
+      </ul>
+      <div class="callout warn"><b>On weighting.</b> The 50/25/25 default is a judgment call, not a derived optimum. We built the live weight sliders specifically so this choice is contestable — if you disagree with our weighting, the tool lets you substitute your own and see how rankings shift.</div>
+      <div class="callout"><b>On precision.</b> The affordability index is a weighted average, not a precision instrument — treat any single score, or a narrow gap between two nearby-ranked towns, as a rough estimate rather than a definitive ranking. We do no independent math on the underlying data itself: home values, incomes, and zoning scores are taken as published by Zillow, the Census Bureau, and NZLUD respectively, and each source documents its own methodology on its own site (linked above). The only math this project adds is the aggregation and weighting layer described on this page — which is exactly why it's laid out in full here rather than left as a black box.</div>
+    </section>
+
+    <section id="reproduce">
+      <h2>Reproducibility</h2>
+      <p>The full pipeline — from raw CSVs to the final scored dataset — is a single documented Python script, <code>build_master.py</code>, available alongside the data. It performs the disambiguation, municipality-level aggregation, source merges, and index computation described above, so every number on this site can be regenerated and audited independently.</p>
+      <div class="cta-row">
+        <a class="navbtn" href="nj_affordability_master.csv" download>Download full dataset (.csv)</a>
+        <a class="navbtn" href="build_master.py" download>Download pipeline script (.py)</a>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer>
+  New Jersey Housing Affordability Index<br>
+  <a href="index.html">Home</a> &middot; <a href="app.html">Interactive map</a> &middot; Questions: <a href="mailto:join.propel@gmail.com">join.propel@gmail.com</a>
+</footer>
+
+<script>
+const links = document.querySelectorAll('aside.toc a');
+const sections = [...links].map(a => document.querySelector(a.getAttribute('href')));
+function onScroll(){
+  let cur = sections[0];
+  for(const s of sections){ if(s && s.getBoundingClientRect().top - 90 <= 0) cur = s; }
+  links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#'+cur.id));
+}
+document.addEventListener('scroll', onScroll, {passive:true});
+onScroll();
+</script>
+</body>
+</html>
